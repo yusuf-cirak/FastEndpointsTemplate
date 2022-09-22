@@ -30,6 +30,8 @@ namespace WebAPI.Endpoints.Auth
                 s.Summary = "Login user with credentials";
                 s.Description = "Login with parameters below";
                 s.Responses[200] = "Login is successful";
+                s.Responses[404] = "Wrong user credentials";
+
             });
             Validator<LoginUserRequestValidator>();
         }

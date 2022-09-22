@@ -1,11 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using WebAPI.Data.Repositories;
-using WebAPI.Data.Repositories.User;
 using WebAPI.Helpers.Hashing;
 using WebAPI.Helpers.Token;
 using WebAPI.Models;
@@ -42,7 +34,7 @@ namespace WebAPI.Data.Services.Auth
 
             if (user!=null &&!HashingHelper.VerifyPasswordHash(password, user.PasswordHash, user.PasswordSalt))
             {
-                throw new Exception("User credentials wrong");
+                throw new Exception("Wrong credentials");
             }
 
             List<OperationClaim> operationClaims = new();

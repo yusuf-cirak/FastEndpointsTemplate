@@ -2,7 +2,6 @@ using System.Text.Json;
 using FastEndpoints;
 using FastEndpoints.Swagger;
 using WebAPI.Extensions;
-using WebAPI.Helpers.Token;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,7 +18,7 @@ builder.Services.AddJwtBearerServices(builder.Configuration); // Extension metho
 builder.Services.AddSwaggerDoc(); //add this
 
 builder.Services.AddRepositoryServices();
-builder.Services.AddDbContextServices(builder.Configuration); // Extension method from Extensions>ServiceRegistration.cs
+builder.Services.AddDbContextServices(builder.Configuration); // Extension method
 builder.Services.AddHelpersServices();
 
 var app = builder.Build();
@@ -37,7 +36,7 @@ app.UseFastEndpoints(c => {
     c.Serializer.Options.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
 });
 app.UseOpenApi();
-app.UseSwaggerUi3(s => s.ConfigureDefaults()); //add this
+app.UseSwaggerUi3(s => s.ConfigureDefaults()); // Method from FastEndpoints.Swagger
 
 
 

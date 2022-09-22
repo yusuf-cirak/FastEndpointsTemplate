@@ -12,16 +12,11 @@ namespace WebAPI.Extensions
     {
         public static IServiceCollection AddRepositoryServices(this IServiceCollection services)
         {
-            services.AddScoped<ITokenHandler,TokenHandler>();
-
             services.AddScoped<IUserRepository,UserRepository>();
 
             services.AddScoped<IUserService,UserService>();
 
             services.AddScoped<IAuthService,AuthService>();
-
-
-
 
             return services;
         }
