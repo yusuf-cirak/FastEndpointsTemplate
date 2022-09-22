@@ -2,12 +2,14 @@ using System.Text.Json;
 using FastEndpoints;
 using FastEndpoints.Swagger;
 using WebAPI.Extensions;
+using WebAPI.Helpers.Token;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
 builder.Services.AddFastEndpoints();
+builder.Services.AddJwtBearerServices(builder.Configuration); // Extension method from Extensions>ServiceRegistration.cs
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 
@@ -17,7 +19,8 @@ builder.Services.AddFastEndpoints();
 builder.Services.AddSwaggerDoc(); //add this
 
 builder.Services.AddRepositoryServices();
-builder.Services.AddDbContextServices(builder.Configuration); // Extension method
+builder.Services.AddDbContextServices(builder.Configuration); // Extension method from Extensions>ServiceRegistration.cs
+builder.Services.AddHelpersServices();
 
 var app = builder.Build();
 

@@ -1,12 +1,13 @@
 ﻿using FastEndpoints;
 using FluentValidation;
-using WebAPI.Contracts.Requests.AppUser;
+using WebAPI.Endpoints;
+using WebAPI.Endpoints.Auth;
 
 namespace WebAPI.Middlewares.Validation
 {
-    public sealed class CreateAppUserRequestValidator : Validator<CreateAppUserRequest>
+    public sealed class RegisterUserRequestValidator : Validator<RegisterUserRequest>
     {
-        public CreateAppUserRequestValidator()
+        public RegisterUserRequestValidator()
         {
             RuleFor(r => r.Email).NotEmpty().EmailAddress().WithMessage("You must enter a valid email");
             RuleFor(r => r.FirstName).NotEmpty().MinimumLength(3);
