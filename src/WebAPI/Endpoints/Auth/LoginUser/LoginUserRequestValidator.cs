@@ -12,7 +12,7 @@ namespace WebAPI.Middlewares.Validation
     {
         public LoginUserRequestValidator()
         {
-            RuleFor(r => r.Email).NotEmpty().WithMessage("You must enter a email or user name");
+            RuleFor(r => r.EmailOrUserName).NotEmpty().WithMessage("You must enter a email or user name");
             RuleFor(r => r.Password).NotEmpty().MinimumLength(3).WithMessage("Minimum password length is three");
         }
     }

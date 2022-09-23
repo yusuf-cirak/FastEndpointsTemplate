@@ -13,7 +13,7 @@ namespace WebAPI.Middlewares.Validation
             RuleFor(r => r.FirstName).NotEmpty().MinimumLength(3);
             RuleFor(r => r.LastName).NotEmpty().WithMessage("You must enter your last name");
             RuleFor(r => r.UserName).NotEmpty().MinimumLength(3).WithMessage("Minimum user name length is three");
-            RuleFor(r => r.PhoneNumber).NotEmpty();
+            RuleFor(r => r.PhoneNumber).NotEmpty().MinimumLength(13).WithMessage("Wrong format, example is 000-000-00-00");
             RuleFor(r => r.Password).NotEmpty().MinimumLength(3).WithMessage("Minimum password length is three");
         }
     }

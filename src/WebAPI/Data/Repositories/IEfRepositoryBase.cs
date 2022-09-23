@@ -4,34 +4,37 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query;
 using WebAPI.Models.Common;
 
 namespace WebAPI.Data.Repositories
 {
     public interface IEfRepositoryBase<TEntity>
-    where TEntity : Entity,new()
+    where TEntity : Entity, new()
     {
 
-        public DbSet<TEntity> Table {get;}
-
+        IQueryable<TEntity> Query();
 
         // Read
-        IQueryable<TEntity> GetAll(bool tracking = true);
-        IQueryable<TEntity> GetWhere(Expression<Func<TEntity, bool>> method, bool tracking = true);
-        Task<TEntity> GetSingleAsync(Expression<Func<TEntity, bool>> method, bool tracking = true);
+        Task<TEntity?> GetAsync(Expression<Func<TEntity, bool>> predicate, Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>>?
+        include = null,
+         bool enableTracking = true);
+
+        Task<IList<TEntity>> GetListAsync(Expression<Func<TEntity, bool>>? predicate = null,
+                                        Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>>? orderBy = null,
+                                        Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>>? include = null,
+                                         bool enableTracking = true,
+                                        CancellationToken cancellationToken = default);
 
 
         // Write
 
         Task<TEntity> AddAsync(TEntity entity);
-        Task<List<TEntity>> AddRangeAsync(List<TEntity> datas);
-        Task RemoveAsync(TEntity entity);
-        Task RemoveRangeAsync(List<TEntity> datas);
+        Task<IList<TEntity>> AddRangeAsync(IList<TEntity> entities);
 
         Task<TEntity> UpdateAsync(TEntity entity);
+        Task<TEntity> DeleteAsync(TEntity entity);
 
-
-        Task SaveChangesAsync();
 
     }
 }

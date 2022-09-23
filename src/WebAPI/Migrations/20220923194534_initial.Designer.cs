@@ -12,7 +12,7 @@ using WebAPI.Data.Contexts;
 namespace WebAPI.Migrations
 {
     [DbContext(typeof(TemplateDbContext))]
-    [Migration("20220922220345_initial")]
+    [Migration("20220923194534_initial")]
     partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -38,6 +38,18 @@ namespace WebAPI.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("OperationClaims");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "Admin"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "User"
+                        });
                 });
 
             modelBuilder.Entity("WebAPI.Models.User", b =>

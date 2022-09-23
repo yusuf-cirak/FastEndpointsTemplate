@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WebAPI.Data.Contexts;
 
@@ -11,9 +12,10 @@ using WebAPI.Data.Contexts;
 namespace WebAPI.Migrations
 {
     [DbContext(typeof(TemplateDbContext))]
-    partial class TemplateDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220923233619_user_userName")]
+    partial class user_userName
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

@@ -14,7 +14,7 @@ namespace WebAPI.Endpoints.Auth
 {
     public sealed class LoginUserRequest
     {
-        public string Email { get; set; }
+        public string EmailOrUserName { get; set; }
         public string Password { get; set; }
     }
 
@@ -37,15 +37,20 @@ namespace WebAPI.Endpoints.Auth
         }
 
             private readonly IAuthService _authService;
+            private readonly AuthBusinessRules _businessRules;
 
-        public LoginUserEndpoint(IAuthService authService)
+        public LoginUserEndpoint(IAuthService authService, AuthBusinessRules businessRules)
         {
             _authService = authService;
+            _businessRules = businessRules;
         }
 
         public override async Task HandleAsync(LoginUserRequest req, CancellationToken ct)
         {
-            AccessToken token = await _authService.LoginAsync(req.Email,req.Password);
+            User user= await _businessRules.UserMustExistBeforeLogin(req.EmailOrUserName);
+
+            
+            AccessToken token = _authService.LoginAsync(user,req.Password);
 
             LoginUserResponse response = new(){AccessToken=token};
 

@@ -4,35 +4,56 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query;
 using WebAPI.Models.Common;
 
 namespace WebAPI.Data.Repositories
 {
     public class EfRepositoryBase<TEntity, TContext> : IEfRepositoryBase<TEntity>
-    where TEntity : Entity,new()
+    where TEntity : Entity, new()
     where TContext : DbContext
     {
-        public TContext Context { get; }
+        protected TContext Context { get; }
+
         public EfRepositoryBase(TContext context)
         {
             Context = context;
         }
 
-        public DbSet<TEntity> Table => Context.Set<TEntity>();
+        public async Task<TEntity?> GetAsync(Expression<Func<TEntity, bool>> predicate, Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>>?
+            include = null,
+            bool enableTracking = true)
+        {
+            IQueryable<TEntity> queryable = Query();
 
-        // Read
+            if (!enableTracking) queryable.AsNoTracking();
+            if (include != null) queryable = include(queryable);
 
-        public IQueryable<TEntity> GetAll(bool tracking = true)
-        => tracking ? Table : Table.AsNoTracking();
+            return await queryable.FirstOrDefaultAsync(predicate);
+        }
 
-        public IQueryable<TEntity> GetWhere(Expression<Func<TEntity, bool>> method, bool tracking = true)
-        => tracking ? Table.Where(method) : Table.AsNoTracking().Where(method);
+        public async Task<IList<TEntity>> GetListAsync(Expression<Func<TEntity, bool>>? predicate = null,
+                                                           Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>>? orderBy =
+                                                               null,
+                                                           Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>>?
+                                                               include = null,
+                                                         bool enableTracking = true,
+                                                           CancellationToken cancellationToken = default)
+        {
+            IQueryable<TEntity> queryable = Query();
+            if (!enableTracking) queryable = queryable.AsNoTracking();
+            if (include != null) queryable = include(queryable);
+            if (predicate != null) queryable = queryable.Where(predicate);
 
-        public Task<TEntity> GetSingleAsync(Expression<Func<TEntity, bool>> method, bool tracking = true)
-        => tracking ? Table.SingleAsync(method) : Table.AsNoTracking().SingleAsync(method);
+            if (orderBy != null)
+                return await orderBy(queryable).ToListAsync();
+            return await queryable.ToListAsync();
+        }
 
-
-        // Write
+        public IQueryable<TEntity> Query()
+        {
+            return Context.Set<TEntity>();
+        }
 
         public async Task<TEntity> AddAsync(TEntity entity)
         {
@@ -41,35 +62,17 @@ namespace WebAPI.Data.Repositories
             return entity;
         }
 
-        public async Task<List<TEntity>> AddRangeAsync(List<TEntity> datas)
+        public async Task<IList<TEntity>> AddRangeAsync(IList<TEntity> entities)
         {
-            foreach (var data in datas)
+
+            foreach (TEntity entity in entities)
             {
-                Context.Entry(data).State = EntityState.Added;
+                Context.Entry(entity).State = EntityState.Added;
             }
 
             await Context.SaveChangesAsync();
 
-            return datas;
-        }
-
-        public async Task RemoveAsync(TEntity entity)
-        {
-            Context.Entry(entity).State = EntityState.Deleted;
-
-            await Context.SaveChangesAsync();
-        }
-
-        public async Task RemoveRangeAsync(List<TEntity> datas)
-        {
-
-            foreach (var data in datas)
-            {
-                Context.Entry(data).State = EntityState.Deleted;
-            }
-
-            await Context.SaveChangesAsync();
-
+            return entities;
         }
 
         public async Task<TEntity> UpdateAsync(TEntity entity)
@@ -79,6 +82,11 @@ namespace WebAPI.Data.Repositories
             return entity;
         }
 
-        public async Task SaveChangesAsync()=>await Context.SaveChangesAsync();
+        public async Task<TEntity> DeleteAsync(TEntity entity)
+        {
+            Context.Entry(entity).State = EntityState.Deleted;
+            await Context.SaveChangesAsync();
+            return entity;
+        }
     }
 }

@@ -11,7 +11,8 @@ namespace WebAPI.Helpers.Mapping
         {
             FirstName=r.FirstName,
             LastName=r.LastName,
-            Email=r.Email
+            Email=r.Email,
+            UserName=r.UserName
             
         };
     }

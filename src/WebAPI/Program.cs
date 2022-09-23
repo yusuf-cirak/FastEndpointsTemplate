@@ -20,6 +20,7 @@ builder.Services.AddSwaggerDoc(); //add this
 builder.Services.AddRepositoryServices();
 builder.Services.AddDbContextServices(builder.Configuration); // Extension method
 builder.Services.AddHelpersServices();
+builder.Services.AddBusinessRulesServices();
 
 var app = builder.Build();
 

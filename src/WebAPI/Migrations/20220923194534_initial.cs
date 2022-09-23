@@ -66,6 +66,16 @@ namespace WebAPI.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.InsertData(
+                table: "OperationClaims",
+                columns: new[] { "Id", "Name" },
+                values: new object[] { 1, "Admin" });
+
+            migrationBuilder.InsertData(
+                table: "OperationClaims",
+                columns: new[] { "Id", "Name" },
+                values: new object[] { 2, "User" });
+
             migrationBuilder.CreateIndex(
                 name: "IX_UserOperationClaims_OperationClaimId",
                 table: "UserOperationClaims",

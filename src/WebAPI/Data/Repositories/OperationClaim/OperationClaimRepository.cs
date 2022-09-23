@@ -7,9 +7,9 @@ using WebAPI.Models;
 
 namespace WebAPI.Data.Repositories
 {
-    public sealed class UserRepository : EfRepositoryBase<User, TemplateDbContext>,IUserRepository
+    public class OperationClaimRepository : EfRepositoryBase<OperationClaim, TemplateDbContext>, IOperationClaimRepository
     {
-        public UserRepository(TemplateDbContext context) : base(context)
+        public OperationClaimRepository(TemplateDbContext context) : base(context)
         {
         }
     }

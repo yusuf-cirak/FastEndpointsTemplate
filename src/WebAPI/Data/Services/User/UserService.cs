@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using WebAPI.Data.Repositories.User;
+using WebAPI.Data.Repositories;
 using WebAPI.Models;
 
 namespace WebAPI.Data.Services.Auth
@@ -11,48 +11,65 @@ namespace WebAPI.Data.Services.Auth
     public sealed class UserService : IUserService
     {
         private readonly IUserRepository _userRepository;
+        private readonly IUserOperationClaimRepository _userOperationClaimRepository;
 
-        public UserService(IUserRepository repository)
+        public UserService(IUserRepository repository, IUserOperationClaimRepository userOperationClaimRepository)
         {
             _userRepository = repository;
+            _userOperationClaimRepository = userOperationClaimRepository;
         }
 
-        public async Task<Models.User> CreateUserAsync(Models.User user)
+        public async Task<User> CreateUserAsync(User user)
         {
-            user=await _userRepository.AddAsync(user);
-
-            List<UserOperationClaim> userOperationClaims=new();
-
-            userOperationClaims.Add(new(0,user.Id,1));
-
-            user= AddUserOperationClaimsAsync(user,userOperationClaims);
-
-           await _userRepository.SaveChangesAsync();
-
-            return user;
+            return await _userRepository.AddAsync(user);
         }
 
-        public async Task<Models.User> GetUserByEmail(string email)
+        public async Task<User?> GetUserByEmail(string email)
         {
-          return await _userRepository.Table.AsNoTracking()
-          .Include(e=>e.UserOperationClaims)
-          .ThenInclude(e=>e.OperationClaim)
-          .FirstOrDefaultAsync(e=>e.Email==email);
+          return await _userRepository.GetAsync
+          (u=>u.Email==email,
+          include:u=>u.Include(u=>u.UserOperationClaims)
+          .ThenInclude(uop=>uop.OperationClaim),enableTracking:false);
         }
 
+        public async Task<User?> GetUserByUserName(string userName)
+        {
+          return await _userRepository.GetAsync
+          (u=>u.UserName==userName,
+          include:u=>u.Include(u=>u.UserOperationClaims)
+          .ThenInclude(uop=>uop.OperationClaim),enableTracking:false);
+        }
+        public async Task<User> GetUserById(int id)
+        {
+          return await _userRepository.GetAsync
+          (u=>u.Id==id,
+          include:u=>u.Include(u=>u.UserOperationClaims)
+          .ThenInclude(uop=>uop.OperationClaim),enableTracking:false);
+        }
 
-        public  User AddUserOperationClaimAsync(Models.User user, UserOperationClaim userOperatinClaim)
+        public async Task<List<UserOperationClaim>> GetUserOperationClaimsByUserId(int id)
+        {
+            var data= await _userRepository.GetAsync
+           (predicate:e=>e.Id==id,
+           include:e=>e.Include(e=>e.UserOperationClaims).ThenInclude(e=>e.OperationClaim),enableTracking:false);
+
+          return data.UserOperationClaims.ToList();
+        }
+
+        public  User AddUserOperationClaimAsync(User user, UserOperationClaim userOperatinClaim)
         {
             user.UserOperationClaims.Append(userOperatinClaim);
             return user;
         }
 
-        public User AddUserOperationClaimsAsync(Models.User user, IList<UserOperationClaim> userOperationClaims)
+        public User AddUserOperationClaimsAsync(Models.User user, List<UserOperationClaim> userOperationClaims)
         {
             foreach (var userOperationClaim in userOperationClaims)
             {
                 user.UserOperationClaims.Append(userOperationClaim);
             }
+
+                _userOperationClaimRepository.AddRangeAsync(userOperationClaims);
 
             return user;
         }

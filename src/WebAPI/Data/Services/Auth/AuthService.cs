@@ -1,3 +1,4 @@
+using WebAPI.Data.Repositories;
 using WebAPI.Helpers.Hashing;
 using WebAPI.Helpers.Token;
 using WebAPI.Models;
@@ -24,13 +25,19 @@ namespace WebAPI.Data.Services.Auth
 
             user = await _userService.CreateUserAsync(user);
 
-            return _tokenHandler.CreateAccessToken(user, user.UserOperationClaims.Select(e => e.OperationClaim).ToList());
+            List<UserOperationClaim> userOperationClaims=new();
+
+            userOperationClaims.Add(new(0,user.Id,2));
+
+            user= _userService.AddUserOperationClaimsAsync(user,userOperationClaims);
+
+            userOperationClaims= await _userService.GetUserOperationClaimsByUserId(user.Id);
+
+            return _tokenHandler.CreateAccessToken(user, user.UserOperationClaims.Select(e=>e.OperationClaim).ToList());
 
         }
-        public async Task<AccessToken> LoginAsync(string email, string password)
+        public AccessToken LoginAsync(User user,string password)
         {
-
-          User user = await _userService.GetUserByEmail(email);
 
             if (user!=null &&!HashingHelper.VerifyPasswordHash(password, user.PasswordHash, user.PasswordSalt))
             {

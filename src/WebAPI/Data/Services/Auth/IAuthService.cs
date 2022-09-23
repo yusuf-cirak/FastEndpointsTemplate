@@ -11,7 +11,7 @@ namespace WebAPI.Data.Services.Auth
     {
         Task<AccessToken> RegisterAsync(User user,string password);
 
-        Task<AccessToken> LoginAsync(string email, string password);
+        AccessToken LoginAsync(User user, string password);
 
         
     }

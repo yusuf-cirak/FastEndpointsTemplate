@@ -14,5 +14,14 @@ namespace WebAPI.Data.Contexts
         public DbSet<OperationClaim> OperationClaims { get; set; }
         public DbSet<UserOperationClaim> UserOperationClaims { get; set; }
 
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+
+            OperationClaim[] operationClaimSeedData={new(1,"Admin"),new(2,"User")};
+
+            modelBuilder.Entity<OperationClaim>().HasData(operationClaimSeedData);
+        }
+
     }
 }
