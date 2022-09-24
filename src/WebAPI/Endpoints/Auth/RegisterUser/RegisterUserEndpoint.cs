@@ -34,7 +34,6 @@ namespace WebAPI.Endpoints.Auth
             Summary(s => {
                 s.Summary = "Register a user";
                 s.Description = "Register with parameters below";
-                s.Responses[200] = "User registered successfully";
             });
             Validator<RegisterUserRequestValidator>();
 

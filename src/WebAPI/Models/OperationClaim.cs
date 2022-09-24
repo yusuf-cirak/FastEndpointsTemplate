@@ -14,7 +14,7 @@ namespace WebAPI.Models
             
         }
 
-        public OperationClaim(int id,string name):this()
+        public OperationClaim(string id,string name):this()
         {
             Id=id;
             Name=name;

@@ -1,6 +1,7 @@
 ﻿using FastEndpoints;
 using WebAPI.Endpoints;
 using WebAPI.Endpoints.Auth;
+using WebAPI.Endpoints.OperationClaim.CreateOperationClaim;
 using WebAPI.Models;
 
 namespace WebAPI.Helpers.Mapping
@@ -14,6 +15,14 @@ namespace WebAPI.Helpers.Mapping
             Email=r.Email,
             UserName=r.UserName
             
+        };
+    }
+
+
+    public sealed class CreateOperationClaimMapper:Mapper<CreateOperationClaimRequest,CreateOperationClaimResponse,OperationClaim>{
+        public override OperationClaim ToEntity(CreateOperationClaimRequest r)
+        =>new(){
+            Name=r.Name
         };
     }
 }

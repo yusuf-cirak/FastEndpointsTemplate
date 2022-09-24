@@ -29,9 +29,6 @@ namespace WebAPI.Endpoints.Auth
             {
                 s.Summary = "Login user with credentials";
                 s.Description = "Login with parameters below";
-                s.Responses[200] = "Login is successful";
-                s.Responses[404] = "Wrong user credentials";
-
             });
             Validator<LoginUserRequestValidator>();
         }
@@ -49,8 +46,9 @@ namespace WebAPI.Endpoints.Auth
         {
             User user= await _businessRules.UserMustExistBeforeLogin(req.EmailOrUserName);
 
+            _businessRules.VerifyUserPassword(user,req.Password);
             
-            AccessToken token = _authService.LoginAsync(user,req.Password);
+            AccessToken token = _authService.LoginAsync(user);
 
             LoginUserResponse response = new(){AccessToken=token};
 

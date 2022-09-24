@@ -18,9 +18,10 @@ namespace WebAPI.Data.Contexts
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
 
-            OperationClaim[] operationClaimSeedData={new(1,"Admin"),new(2,"User")};
+            // OperationClaim[] operationClaimSeedData={new(Guid.NewGuid().ToString(),"Admin"),new(Guid.NewGuid().ToString(),"User")};
 
-            modelBuilder.Entity<OperationClaim>().HasData(operationClaimSeedData);
+            // modelBuilder.Entity<OperationClaim>().HasData(operationClaimSeedData);
+            // Seed data added, commented this for id conflict
         }
 
     }

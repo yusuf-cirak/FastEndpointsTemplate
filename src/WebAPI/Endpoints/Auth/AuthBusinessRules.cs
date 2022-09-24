@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using WebAPI.Data.Repositories;
 using WebAPI.Data.Services.Auth;
+using WebAPI.Helpers.Hashing;
 using WebAPI.Models;
 
 namespace WebAPI.Endpoints.Auth
@@ -21,8 +22,8 @@ namespace WebAPI.Endpoints.Auth
         {
 
             User? user = 
-                await _userService.GetUserByEmail(emailOrUserName) ??
-                await _userService.GetUserByUserName(emailOrUserName);
+                await _userService.GetUserByEmail(emailOrUserName,includeOperationClaims:true) ??
+                await _userService.GetUserByUserName(emailOrUserName,includeOperationClaims:true);
 
             if (user == null)
             {
@@ -30,6 +31,15 @@ namespace WebAPI.Endpoints.Auth
             }
 
             return user;
+        }
+
+        public void VerifyUserPassword(User user,string password)
+        {
+
+            if (!HashingHelper.VerifyPasswordHash(password, user.PasswordHash, user.PasswordSalt))
+            {
+                throw new Exception("Wrong credentials");
+            }
         }
     }
 }

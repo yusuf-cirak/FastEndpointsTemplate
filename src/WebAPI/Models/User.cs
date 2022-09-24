@@ -23,7 +23,7 @@ namespace WebAPI.Models
         UserOperationClaims = new HashSet<UserOperationClaim>();
     }
 
-    public User(int id, string firstName, string lastName, string email, byte[] passwordSalt, byte[] passwordHash,
+    public User(string id, string firstName, string lastName, string email, byte[] passwordSalt, byte[] passwordHash,
                 bool status) : this()
     {
         Id = id;

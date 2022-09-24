@@ -12,7 +12,7 @@ using WebAPI.Data.Contexts;
 namespace WebAPI.Migrations
 {
     [DbContext(typeof(TemplateDbContext))]
-    [Migration("20220923194534_initial")]
+    [Migration("20220924133328_initial")]
     partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -26,11 +26,8 @@ namespace WebAPI.Migrations
 
             modelBuilder.Entity("WebAPI.Models.OperationClaim", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
@@ -42,23 +39,20 @@ namespace WebAPI.Migrations
                     b.HasData(
                         new
                         {
-                            Id = 1,
+                            Id = "06de6e55-f0d9-41c7-b00c-f00086e422eb",
                             Name = "Admin"
                         },
                         new
                         {
-                            Id = 2,
+                            Id = "7fb00e19-8029-4ded-81d4-f8594b584490",
                             Name = "User"
                         });
                 });
 
             modelBuilder.Entity("WebAPI.Models.User", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Email")
                         .HasColumnType("nvarchar(max)");
@@ -78,6 +72,9 @@ namespace WebAPI.Migrations
                     b.Property<bool>("Status")
                         .HasColumnType("bit");
 
+                    b.Property<string>("UserName")
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
                     b.ToTable("Users");
@@ -85,17 +82,14 @@ namespace WebAPI.Migrations
 
             modelBuilder.Entity("WebAPI.Models.UserOperationClaim", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    b.Property<string>("OperationClaimId")
+                        .HasColumnType("nvarchar(450)");
 
-                    b.Property<int>("OperationClaimId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
@@ -110,15 +104,11 @@ namespace WebAPI.Migrations
                 {
                     b.HasOne("WebAPI.Models.OperationClaim", "OperationClaim")
                         .WithMany()
-                        .HasForeignKey("OperationClaimId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("OperationClaimId");
 
                     b.HasOne("WebAPI.Models.User", "User")
                         .WithMany("UserOperationClaims")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("UserId");
 
                     b.Navigation("OperationClaim");
 

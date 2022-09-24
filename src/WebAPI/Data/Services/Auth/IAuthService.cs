@@ -10,8 +10,13 @@ namespace WebAPI.Data.Services.Auth
     public interface IAuthService
     {
         Task<AccessToken> RegisterAsync(User user,string password);
+        // Register user with default role
 
-        AccessToken LoginAsync(User user, string password);
+        // Task<AccessToken> RegisterAsync(User user,string password,List<OperationClaim> operationClaims);
+        // Register user with specified claims
+
+
+        AccessToken LoginAsync(User user);
 
         
     }

@@ -1,4 +1,6 @@
+using Microsoft.EntityFrameworkCore;
 using WebAPI.Data.Repositories;
+using WebAPI.Endpoints.Auth;
 using WebAPI.Helpers.Hashing;
 using WebAPI.Helpers.Token;
 using WebAPI.Models;
@@ -9,51 +11,58 @@ namespace WebAPI.Data.Services.Auth
     {
         private readonly ITokenHandler _tokenHandler;
         private readonly IUserService _userService;
+        private readonly IUserOperationClaimRepository _userOperationClaimRepository;
+
+        private readonly IOperationClaimRepository _operationClaimRepository;
 
 
-        public AuthService(IUserService userService, ITokenHandler tokenHandler)
+        private readonly AuthBusinessRules _businessRules;
+
+
+        public AuthService(ITokenHandler tokenHandler, IUserService userService, IOperationClaimRepository operationClaimRepository, IUserOperationClaimRepository userOperationClaimRepository, AuthBusinessRules businessRules)
         {
-            _userService = userService;
             _tokenHandler = tokenHandler;
+            _userService = userService;
+            _operationClaimRepository = operationClaimRepository;
+            _userOperationClaimRepository = userOperationClaimRepository;
+            _businessRules = businessRules;
         }
 
         public async Task<AccessToken> RegisterAsync(User user, string password)
         {
-            HashingHelper.CreatePasswordHash(password, out byte[] passwordHash, out byte[] passwordSalt);
-            user.PasswordSalt = passwordSalt;
-            user.PasswordHash = passwordHash;
+            user = _userService.CreateUserIdAndHashedPassword(user, password);
 
-            user = await _userService.CreateUserAsync(user);
+            List<OperationClaim> operationClaim = await CreateUserWithDefaultOperationClaim(user);
 
-            List<UserOperationClaim> userOperationClaims=new();
-
-            userOperationClaims.Add(new(0,user.Id,2));
-
-            user= _userService.AddUserOperationClaimsAsync(user,userOperationClaims);
-
-            userOperationClaims= await _userService.GetUserOperationClaimsByUserId(user.Id);
-
-            return _tokenHandler.CreateAccessToken(user, user.UserOperationClaims.Select(e=>e.OperationClaim).ToList());
+            return _tokenHandler.CreateAccessToken(user, operationClaim);
 
         }
-        public AccessToken LoginAsync(User user,string password)
+        public AccessToken LoginAsync(User user)
         {
-
-            if (user!=null &&!HashingHelper.VerifyPasswordHash(password, user.PasswordHash, user.PasswordSalt))
-            {
-                throw new Exception("Wrong credentials");
-            }
-
-            List<OperationClaim> operationClaims = new();
-            foreach (var userOperationClaim in user.UserOperationClaims)
-            {
-                operationClaims.Add(userOperationClaim.OperationClaim);
-            }
+            List<OperationClaim> operationClaims = user.UserOperationClaims.Select(e => e.OperationClaim).ToList();
 
             AccessToken token = _tokenHandler.CreateAccessToken(user, operationClaims);
 
             return token;
 
+        }
+
+
+
+
+
+        private async Task<List<OperationClaim>> CreateUserWithDefaultOperationClaim(User user)
+        {
+
+            List<OperationClaim> operationClaims = new();
+            operationClaims.Add(new("7fb00e19-8029-4ded-81d4-f8594b584490", "User")); // Seed data
+
+            await _userService.CreateUserAsync(user);
+
+
+            user = await _userService.AddUserOperationClaimAsync(user, operationClaims.First());
+
+            return operationClaims;
         }
     }
 }

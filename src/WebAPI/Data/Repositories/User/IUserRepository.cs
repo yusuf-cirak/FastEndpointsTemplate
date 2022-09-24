@@ -6,7 +6,8 @@ using WebAPI.Models;
 
 namespace WebAPI.Data.Repositories
 {
-    public interface IUserRepository:IEfRepositoryBase<User>
-    {   
+    public interface IUserRepository : IEfRepositoryBase<User>
+    {
+        
     }
 }

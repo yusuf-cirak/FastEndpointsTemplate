@@ -10,15 +10,18 @@ namespace WebAPI.Data.Services.Auth
     {
         Task<User> CreateUserAsync(User user);
 
-        Task<User?> GetUserByEmail(string email);
-        Task<User?> GetUserByUserName(string userName);
-        Task<User> GetUserById(int id);
+        Task<User?> GetUserByEmail(string email,bool includeOperationClaims=false);
+        Task<User?> GetUserByUserName(string userName,bool includeOperationClaims=false);
+        Task<User> GetUserById(string id,bool includeOperationClaims=false);
 
 
+        
+        User CreateUserIdAndHashedPassword(User user, string password);
 
-        Task<List<UserOperationClaim>> GetUserOperationClaimsByUserId(int id);
-        User AddUserOperationClaimAsync(User user, UserOperationClaim userOperatinClaim);
-        User AddUserOperationClaimsAsync(Models.User user, List<UserOperationClaim> userOperationClaims);
+
+        Task<List<UserOperationClaim>> GetUserOperationClaimsByUserId(string id);
+        Task<User> AddUserOperationClaimAsync(User user,OperationClaim operationClaim);
+        User AddUserOperationClaimsAsync(User user, List<UserOperationClaim> userOperationClaims);
 
     }
 }
