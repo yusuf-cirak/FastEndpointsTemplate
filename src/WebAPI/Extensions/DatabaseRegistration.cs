@@ -7,7 +7,7 @@ using WebAPI.Data.Contexts;
 
 namespace WebAPI.Extensions
 {
-    public static class DbServices
+    public static class DatabaseRegistration
     {
         public static IServiceCollection AddDbContextServices(this IServiceCollection services, IConfiguration configuration)
         {

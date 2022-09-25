@@ -5,7 +5,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using FastEndpoints;
 using WebAPI.Data.Repositories;
-using WebAPI.Helpers.Mapping;
+using WebAPI.Mapping;
 
 namespace WebAPI.Endpoints.OperationClaim.CreateOperationClaim
 {

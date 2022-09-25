@@ -1,9 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using WebAPI.Data.Repositories;
 using WebAPI.Endpoints.Auth;
-using WebAPI.Helpers.Hashing;
-using WebAPI.Helpers.Token;
 using WebAPI.Models;
+using WebAPI.Utilities.JWT;
 
 namespace WebAPI.Data.Services.Auth
 {

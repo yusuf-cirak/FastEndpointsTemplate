@@ -6,7 +6,7 @@ using WebAPI.Endpoints.Auth;
 
 namespace WebAPI.Extensions
 {
-    public static class BusinessRuleServices
+    public static class BusinessRuleRegistration
     {
         public static IServiceCollection AddBusinessRulesServices(this IServiceCollection services){
             services.AddScoped<AuthBusinessRules>();

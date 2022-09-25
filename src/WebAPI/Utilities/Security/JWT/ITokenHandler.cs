@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.IdentityModel.Tokens;
 using WebAPI.Models;
 
-namespace WebAPI.Helpers.Token
+namespace WebAPI.Utilities.JWT
 {
     public interface ITokenHandler
     {

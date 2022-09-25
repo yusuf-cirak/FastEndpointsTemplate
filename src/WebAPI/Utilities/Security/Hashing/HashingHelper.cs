@@ -5,7 +5,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace WebAPI.Helpers.Hashing;
+namespace WebAPI.Utilities.Security.Hashing;
 
     public class HashingHelper
 {

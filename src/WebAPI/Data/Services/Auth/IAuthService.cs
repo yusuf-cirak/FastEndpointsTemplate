@@ -2,8 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using WebAPI.Helpers.Token;
 using WebAPI.Models;
+using WebAPI.Utilities.JWT;
 
 namespace WebAPI.Data.Services.Auth
 {

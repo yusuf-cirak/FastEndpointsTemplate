@@ -6,9 +6,9 @@ using FastEndpoints;
 using Microsoft.AspNetCore.Identity;
 using WebAPI.Data.Repositories;
 using WebAPI.Data.Services.Auth;
-using WebAPI.Helpers.Token;
 using WebAPI.Middlewares.Validation;
 using WebAPI.Models;
+using WebAPI.Utilities.JWT;
 
 namespace WebAPI.Endpoints.Auth
 {

@@ -7,9 +7,12 @@ using System.Text;
 using System.Threading.Tasks;
 using FastEndpoints.Security;
 using Microsoft.IdentityModel.Tokens;
+using WebAPI.Helpers.Security.Encryption;
 using WebAPI.Models;
+using WebAPI.Utilities.Security.Encryption;
+using WebAPI.Utilities.Security.Extensions;
 
-namespace WebAPI.Helpers.Token
+namespace WebAPI.Utilities.JWT
 {
     public sealed class TokenHandler:ITokenHandler
     {
@@ -38,7 +41,7 @@ namespace WebAPI.Helpers.Token
             expires: expiration,
             notBefore: DateTime.Now,
             claims: SetClaims(user, operationClaims),
-            signingCredentials: SigningCredentialsHelper(SecurityKeyHelper(tokenOptions.SecurityKey))
+            signingCredentials: SigningCredentialsHelper.CreateSigningCredentials(SecurityKeyHelper.CreateSecurityKey(tokenOptions.SecurityKey))
         );
 
         JwtSecurityTokenHandler handler=new();
@@ -47,27 +50,22 @@ namespace WebAPI.Helpers.Token
 
         }
 
-
-        private SigningCredentials SigningCredentialsHelper(SecurityKey securityKey)
-        {
-            return new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha512Signature);
-        }
-
-        private SymmetricSecurityKey SecurityKeyHelper(string securityKey)
-        {
-            return new SymmetricSecurityKey(Encoding.UTF8.GetBytes(securityKey));
-        }
-
         private IEnumerable<Claim> SetClaims(User user, IList<OperationClaim> operationClaims)
         {
             List<Claim> claims = new();
-            claims.Add(new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()));
+            claims.AddNameIdentifier(user.Id);
+            // claims.Add(new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()));
 
-            claims.Add(new Claim(ClaimTypes.Email, user.Email));
+            claims.AddEmail(user.Email);
+            // claims.Add(new Claim(ClaimTypes.Email, user.Email));
 
-            claims.Add(new Claim(ClaimTypes.Name, $"{user.FirstName} {user.LastName}"));
+            claims.AddName($"{user.FirstName} {user.LastName}");
 
-            operationClaims.ToList().ForEach(e => claims.Add(new(ClaimTypes.Role, e.Name)));
+            // claims.Add(new Claim(ClaimTypes.Name, $"{user.FirstName} {user.LastName}"));
+
+            claims.AddRoles(operationClaims.Select(e=>e.Name).ToArray());
+
+            // operationClaims.ToList().ForEach(e => claims.Add(new(ClaimTypes.Role, e.Name)));
 
             return claims;
         }

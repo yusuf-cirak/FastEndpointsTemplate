@@ -19,7 +19,7 @@ builder.Services.AddRepositoryServices();
 
 builder.Services.AddDbContextServices(builder.Configuration); // Extension method
 
-builder.Services.AddHelpersServices();
+builder.Services.AddUtilityServices();
 
 builder.Services.AddBusinessRulesServices();
 

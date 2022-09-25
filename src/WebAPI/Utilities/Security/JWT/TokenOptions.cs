@@ -1,4 +1,4 @@
-﻿namespace WebAPI.Helpers.Token
+﻿namespace WebAPI.Utilities.JWT
 {
     public sealed class TokenOptions
     {

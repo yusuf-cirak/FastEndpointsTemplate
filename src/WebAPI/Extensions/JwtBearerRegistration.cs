@@ -5,11 +5,12 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
-using WebAPI.Helpers.Token;
+using WebAPI.Utilities.JWT;
+using WebAPI.Utilities.Security.Encryption;
 
 namespace WebAPI.Extensions
 {
-    public static class JwtBearerServices
+    public static class JwtBearerRegistration
     {
         internal static IServiceCollection AddJwtBearerServices(this IServiceCollection services,IConfiguration configuration)
         {
@@ -22,7 +23,7 @@ namespace WebAPI.Extensions
                 ValidateIssuerSigningKey = true,
                 ValidAudience = tokenOptions.Audience,
                 ValidIssuer = tokenOptions.Issuer,
-                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(tokenOptions.SecurityKey))
+                IssuerSigningKey = SecurityKeyHelper.CreateSecurityKey(tokenOptions.SecurityKey)
             });
 
             return services;

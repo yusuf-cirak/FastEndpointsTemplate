@@ -1,10 +1,10 @@
 ﻿using FastEndpoints;
 using WebAPI.Data.Repositories;
 using WebAPI.Data.Services.Auth;
-using WebAPI.Helpers.Mapping;
-using WebAPI.Helpers.Token;
+using WebAPI.Mapping;
 using WebAPI.Middlewares.Validation;
 using WebAPI.Models;
+using WebAPI.Utilities.JWT;
 
 namespace WebAPI.Endpoints.Auth
 {

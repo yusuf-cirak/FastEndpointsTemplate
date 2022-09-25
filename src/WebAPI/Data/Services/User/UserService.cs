@@ -4,8 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using WebAPI.Data.Repositories;
-using WebAPI.Helpers.Hashing;
 using WebAPI.Models;
+using WebAPI.Utilities.Security.Hashing;
 
 namespace WebAPI.Data.Services.Auth
 {
