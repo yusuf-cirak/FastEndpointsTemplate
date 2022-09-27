@@ -6,7 +6,7 @@ using WebAPI.Models.Common;
 
 namespace WebAPI.Models
 {
-    public class OperationClaim:Entity
+    public sealed class OperationClaim:Entity
     {
         public string Name { get; set; }
         public OperationClaim()

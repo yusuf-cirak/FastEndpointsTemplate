@@ -6,8 +6,9 @@ using System.Threading.Tasks;
 using FastEndpoints;
 using WebAPI.Data.Repositories;
 using WebAPI.Mapping;
+using WebAPI.Models;
 
-namespace WebAPI.Endpoints.OperationClaim.CreateOperationClaim
+namespace WebAPI.Endpoints.CreateOperationClaim
 {
    public sealed class CreateOperationClaimRequest
     {
@@ -21,23 +22,33 @@ namespace WebAPI.Endpoints.OperationClaim.CreateOperationClaim
 
         Post("operationclaim");
         Roles("Admin");
+        Summary(s =>
+            {
+                s.Summary = "Create a operation claim";
+                s.Description = "Create operation claim with parameters below";
+            });
+
+        Validator<CreateOperationClaimValidator>();
        }
 
        private readonly IOperationClaimRepository _repository;
+       private readonly OperationClaimBusinessRules _businessRules;
 
-        public CreateOperationClaimEndpoint(IOperationClaimRepository repository)
+        public CreateOperationClaimEndpoint(IOperationClaimRepository repository, OperationClaimBusinessRules businessRules)
         {
             _repository = repository;
+            _businessRules = businessRules;
         }
 
         public override async Task HandleAsync(CreateOperationClaimRequest req, CancellationToken ct)
         {
 
-            var operationClaim=await _repository.AddAsync(Map.ToEntity(req));
+           await _businessRules.OperationClaimNameCannotBeDuplicatedBeforeCreatedOrUpdated(req.Name);
 
-            CreateOperationClaimResponse response = new(){OperationClaim=operationClaim};
+            var operationClaim=await _repository.AddAsync(new(id:Guid.NewGuid().ToString(),req.Name));
 
-            await SendAsync(response);
+            await SendAsync(Map.ToResponseEntity(operationClaim));
+
         }
         
     }
@@ -45,6 +56,6 @@ namespace WebAPI.Endpoints.OperationClaim.CreateOperationClaim
 
     public sealed class CreateOperationClaimResponse
     {
-        public Models.OperationClaim OperationClaim { get; set; }
+        public OperationClaim CreatedOperationClaim { get; set; }
     }
 }

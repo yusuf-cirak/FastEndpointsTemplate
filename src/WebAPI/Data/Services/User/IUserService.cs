@@ -21,7 +21,12 @@ namespace WebAPI.Data.Services.Auth
 
         Task<List<UserOperationClaim>> GetUserOperationClaimsByUserId(string id);
         Task<User> AddUserOperationClaimAsync(User user,OperationClaim operationClaim);
-        User AddUserOperationClaimsAsync(User user, List<UserOperationClaim> userOperationClaims);
+        Task<User> AddUserOperationClaimsAsync(User user, List<UserOperationClaim> userOperationClaims);
 
+
+        Task<IList<User>> GetAllUsers();
+        IQueryable<User> Query();
+        Task DeleteUserAsync(User user);
+        Task<User> UpdateUserAsync(User user);
     }
 }

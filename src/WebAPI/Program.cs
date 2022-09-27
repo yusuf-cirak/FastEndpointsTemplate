@@ -21,7 +21,7 @@ builder.Services.AddDbContextServices(builder.Configuration); // Extension metho
 
 builder.Services.AddUtilityServices();
 
-builder.Services.AddBusinessRulesServices();
+builder.Services.AddBusinessRuleServices();
 
 
 builder.Services.AddAuthentication();

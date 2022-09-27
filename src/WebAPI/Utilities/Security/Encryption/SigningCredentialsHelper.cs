@@ -6,11 +6,11 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace WebAPI.Helpers.Security.Encryption
 {
-    public class SigningCredentialsHelper
+    public sealed class SigningCredentialsHelper
     {
         public static SigningCredentials CreateSigningCredentials(SecurityKey securityKey)
         { 
-            return new SigningCredentials(securityKey,SecurityAlgorithms.HmacSha512Signature); 
+            return new SigningCredentials(securityKey,SecurityAlgorithms.HmacSha256); 
 
         }
     }

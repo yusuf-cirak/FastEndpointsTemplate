@@ -91,15 +91,36 @@ namespace WebAPI.Data.Services.Auth
             return user;
         }
 
-        public User AddUserOperationClaimsAsync(User user, List<UserOperationClaim> userOperationClaims)
+        public async Task<User> AddUserOperationClaimsAsync(User user, List<UserOperationClaim> userOperationClaims)
         {
             foreach (var userOperationClaim in userOperationClaims)
             {
                 user.UserOperationClaims.Add(userOperationClaim);
             }
 
-                _userOperationClaimRepository.AddRangeAsync(userOperationClaims);
+                await _userOperationClaimRepository.AddRangeAsync(userOperationClaims);
 
+            return user;
+        }
+
+        public async Task<IList<User>> GetAllUsers()
+        {
+            return await _userRepository.GetListAsync(enableTracking:false);
+        }
+
+        public IQueryable<User> Query()
+        {
+            return _userRepository.Query();
+        }
+
+        public async Task DeleteUserAsync(User user)
+        {
+           await _userRepository.DeleteAsync(user);
+        }
+
+        public async Task<User> UpdateUserAsync(User user)
+        {
+            await _userRepository.UpdateAsync(user);
             return user;
         }
     }

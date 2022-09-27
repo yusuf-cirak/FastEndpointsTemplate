@@ -12,7 +12,7 @@ using WebAPI.Data.Contexts;
 namespace WebAPI.Migrations
 {
     [DbContext(typeof(TemplateDbContext))]
-    [Migration("20220924133328_initial")]
+    [Migration("20220926231623_initial")]
     partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -27,24 +27,26 @@ namespace WebAPI.Migrations
             modelBuilder.Entity("WebAPI.Models.OperationClaim", b =>
                 {
                     b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(450)")
+                        .HasColumnName("Id");
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("Name");
 
                     b.HasKey("Id");
 
-                    b.ToTable("OperationClaims");
+                    b.ToTable("OperationClaims", (string)null);
 
                     b.HasData(
                         new
                         {
-                            Id = "06de6e55-f0d9-41c7-b00c-f00086e422eb",
+                            Id = "3de010d3-2133-46d9-837b-4daa114d5f01",
                             Name = "Admin"
                         },
                         new
                         {
-                            Id = "7fb00e19-8029-4ded-81d4-f8594b584490",
+                            Id = "482741e3-36a5-4193-9b5d-4be5de5bfa2d",
                             Name = "User"
                         });
                 });
@@ -52,44 +54,65 @@ namespace WebAPI.Migrations
             modelBuilder.Entity("WebAPI.Models.User", b =>
                 {
                     b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(450)")
+                        .HasColumnName("Id");
 
                     b.Property<string>("Email")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("Email");
 
                     b.Property<string>("FirstName")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("FirstName");
 
                     b.Property<string>("LastName")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("LastName");
 
                     b.Property<byte[]>("PasswordHash")
-                        .HasColumnType("varbinary(max)");
+                        .IsRequired()
+                        .HasColumnType("varbinary(max)")
+                        .HasColumnName("PasswordHash");
 
                     b.Property<byte[]>("PasswordSalt")
-                        .HasColumnType("varbinary(max)");
+                        .IsRequired()
+                        .HasColumnType("varbinary(max)")
+                        .HasColumnName("PasswordSalt");
 
                     b.Property<bool>("Status")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(true)
+                        .HasColumnName("Status");
 
                     b.Property<string>("UserName")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("UserName");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users");
+                    b.ToTable("Users", (string)null);
                 });
 
             modelBuilder.Entity("WebAPI.Models.UserOperationClaim", b =>
                 {
                     b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(450)")
+                        .HasColumnName("Id");
 
                     b.Property<string>("OperationClaimId")
-                        .HasColumnType("nvarchar(450)");
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)")
+                        .HasColumnName("OperationClaimId");
 
                     b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)")
+                        .HasColumnName("UserId");
 
                     b.HasKey("Id");
 
@@ -97,18 +120,22 @@ namespace WebAPI.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("UserOperationClaims");
+                    b.ToTable("UserOperationClaims", (string)null);
                 });
 
             modelBuilder.Entity("WebAPI.Models.UserOperationClaim", b =>
                 {
                     b.HasOne("WebAPI.Models.OperationClaim", "OperationClaim")
                         .WithMany()
-                        .HasForeignKey("OperationClaimId");
+                        .HasForeignKey("OperationClaimId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("WebAPI.Models.User", "User")
                         .WithMany("UserOperationClaims")
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("OperationClaim");
 

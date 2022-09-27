@@ -41,5 +41,18 @@ namespace WebAPI.Endpoints.Auth
                 throw new Exception("Wrong credentials");
             }
         }
+
+        public async Task UserEmailOrUserNameCannotDuplicateBeforeRegistered(string email, string userName)
+        {
+            if (await _userService.GetUserByEmail(email,false)!=null)
+            {
+                throw new Exception("An user already exists with that e-mail");
+            }
+
+             if (await _userService.GetUserByUserName(userName,false)!=null)
+            {
+                throw new Exception("An user already exists with that user name");
+            }
+        }
     }
 }

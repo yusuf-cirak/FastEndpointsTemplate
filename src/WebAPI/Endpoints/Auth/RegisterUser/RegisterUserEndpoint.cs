@@ -31,7 +31,8 @@ namespace WebAPI.Endpoints.Auth
             Verbs(Http.POST);
             Routes("auth/register");
             AllowAnonymous();
-            Summary(s => {
+            Summary(s =>
+            {
                 s.Summary = "Register a user";
                 s.Description = "Register with parameters below";
             });
@@ -41,23 +42,26 @@ namespace WebAPI.Endpoints.Auth
 
 
         private readonly IAuthService _authService;
+        private readonly AuthBusinessRules _businessRules;
 
 
-        public RegisterUserEndpoint(IAuthService authService)
+        public RegisterUserEndpoint(IAuthService authService, AuthBusinessRules businessRules)
         {
             _authService = authService;
+            _businessRules = businessRules;
         }
 
 
         public override async Task HandleAsync(RegisterUserRequest request, CancellationToken cancellationToken)
         {
 
+            await _businessRules.UserEmailOrUserNameCannotDuplicateBeforeRegistered(request.Email, request.UserName);
+
             User user = Map.ToEntity(request);
 
-           AccessToken token= await _authService.RegisterAsync(user,request.Password);
-
-           RegisterUserResponse response=new(){AccessToken=token};
-            await SendAsync(response);
+            AccessToken token = await _authService.RegisterAsync(user, request.Password);
+            
+            await SendAsync(Map.ToResponseEntity(token));
         }
     }
 

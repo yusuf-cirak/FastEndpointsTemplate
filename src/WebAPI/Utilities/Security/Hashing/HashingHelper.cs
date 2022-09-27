@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace WebAPI.Utilities.Security.Hashing;
 
-    public class HashingHelper
+    public sealed class HashingHelper
 {
     public static void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
     {

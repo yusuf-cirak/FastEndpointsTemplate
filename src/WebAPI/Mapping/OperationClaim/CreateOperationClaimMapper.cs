@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using FastEndpoints;
-using WebAPI.Endpoints.OperationClaim.CreateOperationClaim;
+using WebAPI.Endpoints.CreateOperationClaim;
 using WebAPI.Models;
 
 namespace WebAPI.Mapping
@@ -13,5 +13,8 @@ namespace WebAPI.Mapping
         =>new(){
             Name=r.Name
         };
+
+        public CreateOperationClaimResponse ToResponseEntity(OperationClaim operationClaim)
+        =>new(){CreatedOperationClaim=operationClaim};
     }
 }

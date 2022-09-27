@@ -1,8 +1,8 @@
 ﻿using FastEndpoints;
 using WebAPI.Endpoints;
 using WebAPI.Endpoints.Auth;
-using WebAPI.Endpoints.OperationClaim.CreateOperationClaim;
 using WebAPI.Models;
+using WebAPI.Utilities.JWT;
 
 namespace WebAPI.Mapping
 {
@@ -16,6 +16,9 @@ namespace WebAPI.Mapping
             UserName=r.UserName
             
         };
+
+        public RegisterUserResponse ToResponseEntity(AccessToken token)
+        =>new(){AccessToken=token};
     }
 
 

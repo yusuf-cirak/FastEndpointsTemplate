@@ -6,6 +6,7 @@ using FastEndpoints;
 using Microsoft.AspNetCore.Identity;
 using WebAPI.Data.Repositories;
 using WebAPI.Data.Services.Auth;
+using WebAPI.Mapping;
 using WebAPI.Middlewares.Validation;
 using WebAPI.Models;
 using WebAPI.Utilities.JWT;
@@ -18,7 +19,7 @@ namespace WebAPI.Endpoints.Auth
         public string Password { get; set; }
     }
 
-    public sealed class LoginUserEndpoint : Endpoint<LoginUserRequest, LoginUserResponse>
+    public sealed class LoginUserEndpoint : Endpoint<LoginUserRequest, LoginUserResponse,LoginUserMapper>
     {
         public override void Configure()
         {
@@ -50,13 +51,11 @@ namespace WebAPI.Endpoints.Auth
             
             AccessToken token = _authService.LoginAsync(user);
 
-            LoginUserResponse response = new(){AccessToken=token};
-
-            await SendAsync(response);
+            await SendAsync(Map.ToResponseEntity(token));
         }
     }
 
-    public class LoginUserResponse
+    public sealed class LoginUserResponse
     {
         public AccessToken AccessToken { get; set; }
     }
